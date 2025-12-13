@@ -1,0 +1,5 @@
+# Machine-specific overrides
+local.conf
+
+# Optional: ignore if you want completely private settings
+private.conf
