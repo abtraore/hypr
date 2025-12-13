@@ -1,0 +1,16 @@
+# Example configuration snippet for ashell config.toml
+# Add this to your ~/.config/ashell/config.toml file
+
+[[CustomModule]]
+name = "VirtualDesktops"
+icon = "󰨳"  # Desktop icon (you can change this to any icon you prefer)
+command = "python3 /home/prof/oss/ashell-vdesk/ashell-vdesk-switch.py"
+listen_cmd = "python3 /home/prof/oss/ashell-vdesk/ashell-vdesk.py"
+
+# To use this module, also add it to your modules list, for example:
+# [modules]
+# left = ["VirtualDesktops", "Workspaces"]
+# # or
+# center = ["WindowTitle"]
+# right = ["Clock", "VirtualDesktops", "Settings"]
+
