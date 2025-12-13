@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd "$HYPR_DIR" && git pull && hyprctl reload
+cd ~ && cd .config/hypr && git pull && hyprctl reload
