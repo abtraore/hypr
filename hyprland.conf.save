@@ -244,7 +244,6 @@ bind = , caps_lock, sendshortcut, escape
 
 #My shitty biddings.
 bind = $mainMod, F, fullscreen, 1
-bind = $mainMod, C, exec, firefoxpwa site launch 01KF9Y6H5DH8SPPEG15XFMSE7J
 bind = $mainMod, M, exec, hyprlock
 
 # Example binds, see https://wiki.hypr.land/Configuring/Binds/ for more
@@ -309,8 +308,8 @@ bindel = ,XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@
 bindel = ,XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
 bindel = ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 bindel = ,XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-bindel = ,XF86MonBrightnessUp, exec, ~/.config/hypr/scripts/brightness.sh up
-bindel = ,XF86MonBrightnessDown, exec, ~/.config/hypr/scripts/brightness.sh down
+bindel = ,XF86MonBrightnessUp, exec, brightnessctl -e4 -n2 set 5%+
+bindel = ,XF86MonBrightnessDown, exec, brightnessctl -e4 -n2 set 5%-
 
 # Requires playerctl
 bindl = , XF86AudioNext, exec, playerctl next
