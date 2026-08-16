@@ -199,9 +199,21 @@ hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 
+-- vdesk routing (raybar): while the bar is up, SUPER+N / SUPER+SHIFT+N write
+-- to raybar's rail.fifo for multi-monitor vdesk switch/move. With the bar down
+-- the redirect fails (or times out on a stale fifo left by a crash) and the
+-- native dispatcher runs instead, so workspace switching never depends on the
+-- bar being alive. The fallback uses the Lua dispatch form: on a Lua-config
+-- session `hyprctl dispatch <legacy name> <arg>` is wrapped as
+-- `return hl.dispatch(<input>)` and syntax-errors, while
+-- `hyprctl dispatch 'hl.dsp...'` evaluates and runs (verified live).
 for i = 1, 9 do
-    hl.bind(mainMod .. " + " .. i,         hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
+    hl.bind(mainMod .. " + " .. i,
+        hl.dsp.exec_cmd(string.format(
+            "timeout 1 sh -c 'echo switch:%d > $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/rail.fifo' || hyprctl dispatch 'hl.dsp.focus({ workspace = %d })'", i, i)))
+    hl.bind(mainMod .. " + SHIFT + " .. i,
+        hl.dsp.exec_cmd(string.format(
+            "timeout 1 sh -c 'echo move:%d > $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/rail.fifo' || hyprctl dispatch 'hl.dsp.window.move({ workspace = %d, follow = true })'", i, i)))
 end
 
 hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
@@ -226,9 +238,11 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
--- raybar's capture-first screenshooter (FIFO trigger: no click, overlays survive)
-hl.bind("F12",   hl.dsp.exec_cmd("sh -c 'echo screenshot > $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/rail.fifo'"))
-hl.bind("Print", hl.dsp.exec_cmd("sh -c 'echo screenshot > $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/rail.fifo'"))
+-- raybar's capture-first screenshooter (FIFO trigger: no click, overlays survive).
+-- `timeout 1 ... || :` keeps a bar-down + stale-FIFO press from leaking a
+-- blocked `sh` per press (the same guard the vdesk routing above uses).
+hl.bind("F12",   hl.dsp.exec_cmd("timeout 1 sh -c 'echo screenshot > $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/rail.fifo' || :"))
+hl.bind("Print", hl.dsp.exec_cmd("timeout 1 sh -c 'echo screenshot > $XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/rail.fifo' || :"))
 hl.bind("F5",    hl.dsp.exec_cmd("grim - | wl-copy"))
 
 ----------------------------
