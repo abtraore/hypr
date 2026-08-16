@@ -7,5 +7,5 @@ HYPR_SCRIPTS="$HYPR_DIR/hypr-scripts"
 # Aliases
 alias hyprpush='$HYPR_SCRIPTS/hypr_git_push.sh'
 alias hyprpull='$HYPR_SCRIPTS/hypr_git_pull.sh'
-alias hyprconf='nano ~/.config/hypr/hyprland.conf'
+alias hyprconf='nano ~/.config/hypr/hyprland.lua'
 alias hyprreload='hyprctl reload'

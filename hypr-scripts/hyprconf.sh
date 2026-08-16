@@ -1,2 +1,2 @@
 #!/bin/bash
-kitty -e nano ~/.config/hypr/hyprland.conf
+kitty -e nano ~/.config/hypr/hyprland.lua
